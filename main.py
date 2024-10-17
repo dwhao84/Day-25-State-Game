@@ -32,7 +32,7 @@ for answer in states:
     if answer == answer_state:
         score += 1
         print(f"Correct Answer { answer_state }")
-        # 找到相同state，取出state那裡面的數值。
+        # 找到相同state，取出state那一欄的數值。
         state_data = data[data.state == answer_state].iloc[0]
         # 透過state_data.x找到x_loc, y_loc。
         x_loc, y_loc = state_data.x, state_data.y
