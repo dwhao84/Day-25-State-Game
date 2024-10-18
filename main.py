@@ -1,5 +1,5 @@
 import turtle as t
-import pandas
+import pandas as pd
 
 FONT = ("Arial", 16, "normal")
 CENTER = "center"
@@ -18,9 +18,8 @@ image = "blank_states_img.gif"
 screen.addshape(image)
 t.shape(image)
 
-data = pandas.read_csv("50_states.csv")
-states = data["state"]  # 找到所有的state。
-print(states)           # 印出所有的state。
+data = pd.read_csv("50_states.csv")
+all_states = data.state.to_list()  # 印出所有的state。
 guessed_states = []
 
 # 可以用append的方式，找到數字。
@@ -28,24 +27,25 @@ while len(guessed_states) < 50:
     # Add title()，可以用在確認不管是否能用在辨識大小寫。
     answer_state = screen.textinput(title=f"{len(guessed_states)} / 50 Guess the State",
                                     prompt="What's another state's name").title()
-    for answer in states:
-        if answer == answer_state:
-            guessed_states.append(answer)
-            print(f"Correct Answer { answer_state }")
-            # 找到相同state，取出state那一欄的數值。
-            state_data = data[data.state == answer_state].iloc[0]
-            # 透過state_data.x找到x_loc, y_loc。
-            x_loc, y_loc = state_data.x, state_data.y
-            # 加上州的資料。
-            add_state(answer_state, x_loc, y_loc)
-        else:
-            print("you're enter the wrong answer.")
-            
-    print(f"{ answer_state }")
-    
-    # t.onscreenclick(get_mouse_click_cor)
-    t.mainloop()
-    
+    if answer_state == "Exit":
+        missing_list = []
+        for element in all_states:
+            if element not in guessed_states:
+                missing_list.append(element)
+
+        # 把資料轉成csv
+        df = pd.DataFrame(guessed_states)
+        df.to_csv('leftover_city.csv')
+        break
+
+    if answer_state in all_states:
+        guessed_states.append(answer_state)
+        print(f"Correct Answer { answer_state }")
+        state_data = data[data.state == answer_state].iloc[0] # 找到相同state，取出state那一欄的數值。
+        x_loc, y_loc = state_data.x, state_data.y             # 透過state_data.x找到x_loc, y_loc。
+        add_state(answer_state, x_loc, y_loc)                 # 加上州的資料。
+
+t.mainloop()
 screen.exitonclick()
 
 """
