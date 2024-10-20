@@ -28,11 +28,8 @@ while len(guessed_states) < 50:
     answer_state = screen.textinput(title=f"{len(guessed_states)} / 50 Guess the State",
                                     prompt="What's another state's name").title()
     if answer_state == "Exit":
-        missing_list = []
-        for element in all_states:
-            if element not in guessed_states:
-                missing_list.append(element)
-
+        # Changed to List comprehension
+        missing_list = [ element for element in all_states if element not in guessed_states ]
         # 把資料轉成csv
         df = pd.DataFrame(guessed_states)
         df.to_csv('leftover_city.csv')
